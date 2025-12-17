@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cocoa Nails</title>
+    <meta
+        name="description"
+        content="Cocoa Nails - Tu destino para el diseño de uñas"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-cocoa': '#5D4037', // Un marrón oscuro para el tema
+                        'secondary-cocoa': '#A1887F', // Un marrón más claro
+                        'accent-pink': '#E91E63', // Un rosa/fucsia para acentos (como un color de esmalte)
+                    },
+                    fontFamily: {
+                        'titulo': ['Playfair Display', 'serif'],
+                        'body': ['Roboto', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    </head>
+<body class="font-body text-gray-800 bg-gray-50">
+    
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center py-4">
+            <div class="flex flex-col">
+                <h2 class="text-3xl font-titulo text-primary-cocoa font-bold">Cocoa Nails</h2>
+                <p class="text-xs text-gray-500 mt-1">Tu destino para el diseño de uñas</p>
+            </div>
+
+            <nav class="flex space-x-4 sm:space-x-6">
+                <a href="#servicios" class="text-gray-600 hover:text-accent-pink transition duration-150 flex items-center text-sm sm:text-base">
+                    <i class="bi bi-info-circle mr-1"></i> Servicios
+                </a>
+                <a href="https://wa.me/3135895811?text=Hola%20quiero%20agendar%20una%20cita" target="_blank" class="text-gray-600 hover:text-accent-pink transition duration-150 flex items-center text-sm sm:text-base">
+                    <i class="bi bi-whatsapp mr-1"></i> WhatsApp
+                </a>
+                <a href="https://www.instagram.com/nails_spa_cocoa/" id="instagram" target="_blank" class="text-gray-600 hover:text-accent-pink transition duration-150 flex items-center text-sm sm:text-base">
+                    <i class="bi bi-instagram mr-1"></i> Instagram
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="bg-white py-16 sm:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-10">
+            <div class="lg:w-1/2">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-titulo font-bold leading-tight mb-6">
+                    Descubre la Experiencia <span class="text-accent-pink">Cocoa Nails</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8">
+                    Nos especializamos en diseños únicos, duraderos y personalizados. Usamos productos de alta calidad para que tus manos luzcan espectaculares.
+                </p>
+                <a class="inline-block bg-primary-cocoa text-white font-semibold py-3 px-8 rounded-lg shadow-xl hover:bg-secondary-cocoa transition duration-300 transform hover:scale-105" href="{{ url_for('form') }}">
+                    Agenda tu cita y transforma tus uñas
+                </a>
+            </div>
+
+            <div class="lg:w-1/2 mt-10 lg:mt-0">
+                <img 
+                    src="{{ url_for('static', filename='img/inicio_01.png') }}" 
+                    alt="Diseño de uñas" 
+                    class="rounded-xl shadow-2xl w-full h-auto object-cover"
+                />
+            </div>
+        </div>
+    </main>
+
+    <section id="servicios" class="py-16 sm:py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl font-titulo font-bold text-primary-cocoa mb-2">Por qué elegirnos</h2>
+            <p class="text-lg text-gray-600 mb-12">Experiencia, calidad y dedicación en cada servicio que ofrecemos</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border-t-4 border-accent-pink">
+                    <h3 class="text-xl font-titulo font-bold mb-3 text-primary-cocoa">Semipermanente</h3>
+                    <p class="text-gray-600 text-sm">
+                        Luce uñas impecables por hasta 3 semanas. Brillo intenso y durabilidad con acabado profesional.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border-t-4 border-accent-pink">
+                    <h3 class="text-xl font-titulo font-bold mb-3 text-primary-cocoa">Soft Gel</h3>
+                    <p class="text-gray-600 text-sm">
+                        Extensiones ligeras, resistentes y con acabado natural. Perfectas en menos tiempo.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border-t-4 border-accent-pink">
+                    <h3 class="text-xl font-titulo font-bold mb-3 text-primary-cocoa">Poly Gel</h3>
+                    <p class="text-gray-600 text-sm">
+                        La combinación perfecta entre fuerza y flexibilidad. Uñas naturales que duran semanas.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 border-t-4 border-accent-pink">
+                    <h3 class="text-xl font-titulo font-bold mb-3 text-primary-cocoa">Base Rubber</h3>
+                    <p class="text-gray-600 text-sm">
+                        Fortalece tus uñas naturales y proporciona la base ideal para un acabado perfecto.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-accent-pink py-16 sm:py-20 text-white text-center">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-3xl sm:text-4xl font-titulo font-bold mb-4">¿Lista para consentir tus manos?</h1>
+            <p class="text-lg mb-8 opacity-90">
+                Agenda tu primera cita hoy y descubre por qué somos el salón favorito de muchas clientas.
+            </p>
+            <a class="inline-block bg-white text-accent-pink font-semibold py-3 px-8 rounded-lg shadow-xl hover:bg-gray-100 transition duration-300 transform hover:scale-105" href="{{ url_for('form') }}">
+                Reservar Cita Ahora
+            </a>
+        </div>
+    </section>
+    
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">
+                &copy; 2024 Cocoa Nails. Todos los derechos reservados. 
+                <a href="https://google.com" target="_blank" class="text-secondary-cocoa hover:text-white transition duration-150 ml-2">Visítanos</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

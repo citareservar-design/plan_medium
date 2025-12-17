@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cita Cancelada | Cocoa Nails</title>
+    <!-- Incluir Tailwind CSS para estilos modernos y responsivos -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuración personalizada de Tailwind para un color de marca */
+        :root {
+            --color-primary: #e91e63; /* Rosa fuerte (como en el correo) */
+        }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+        .border-primary { border-color: var(--color-primary); }
+        .hover\:bg-primary-dark:hover { background-color: #c2185b; /* Un poco más oscuro */ }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Fondo muy claro */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-white shadow-2xl rounded-xl overflow-hidden p-6 sm:p-8 transform transition duration-500 hover:scale-[1.01]">
+        
+        <!-- Mensajes Flash de Flask (mostrar el estado de la cancelación) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'success' %}
+                        <div class="p-4 mb-6 text-sm text-green-800 rounded-lg bg-green-50" role="alert">
+                            <span class="font-bold">¡Éxito!</span> {{ message }}
+                        </div>
+                    {% elif category == 'warning' %}
+                        <div class="p-4 mb-6 text-sm text-yellow-800 rounded-lg bg-yellow-50" role="alert">
+                            <span class="font-bold">Atención:</span> {{ message }}
+                        </div>
+                    {% else %}
+                         <div class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                            <span class="font-bold">Error:</span> {{ message }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 mb-6 rounded-full bg-red-100">
+                 <!-- Icono de Cancelación (SVG de círculo con X) -->
+                <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-3">Cita Cancelada</h1>
+            <p class="text-gray-600 mb-8">
+                Lamentamos que no puedas asistir. El horario ha sido liberado para otro cliente.
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            <p class="text-sm text-gray-500 text-center">
+                Si deseas agendar una nueva cita o tienes preguntas, no dudes en contactarnos.
+            </p>
+            <a href="{{ url_for('form') }}" 
+               class="w-full flex justify-center items-center px-4 py-3 border border-transparent 
+                      text-base font-medium rounded-lg shadow-sm text-white bg-primary 
+                      hover:bg-primary-dark transition duration-150 ease-in-out">
+                📅 Volver a Agendar
+            </a>
+            
+            <a href="https://wa.me/3135895811?text=Hola%20Cancele%20la%20cita" 
+               class="w-full flex justify-center items-center px-4 py-3 border border-gray-300 
+                      text-base font-medium rounded-lg shadow-sm text-gray-700 bg-white 
+                      hover:bg-gray-50 transition duration-150 ease-in-out">
+                📞 Contactar al Salón
+            </a>
+        </div>
+
+    </div>
+
+</body>
+</html>

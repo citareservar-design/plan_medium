@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reserva Exitosa | Cocoa Nails</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet"
+    />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-cocoa': '#5D4037',      // Marrón oscuro
+                        'accent-pink': '#E91E63',        // Rosa/Fucsia para acentos
+                        'success-green': '#4CAF50',      // Verde para éxito
+                    },
+                    fontFamily: {
+                        'titulo': ['Playfair Display', 'serif'],
+                        'body': ['Roboto', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    </head>
+<body class="font-body text-gray-800 bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    
+    <main class="w-full max-w-lg">
+        <div class="bg-white p-8 sm:p-12 rounded-xl shadow-2xl text-center border-t-8 border-success-green">
+            
+            <i class="fas fa-calendar-check text-success-green text-6xl mb-6"></i>
+            
+            <h1 class="text-3xl sm:text-4xl font-titulo font-bold text-primary-cocoa mb-4">
+                ¡Reserva Exitosa!
+            </h1>
+            
+            <p id="mensaje" class="message text-gray-600 mb-8 leading-relaxed">
+                ¡Tu cita ha sido confirmada con éxito! Te esperamos en Cocoa Nails. 
+                Si proporcionaste un correo electrónico, puedes visualizar la fecha y hora en tu bandeja de entrada o carpeta de spam.
+            </p>
+            
+            <a class="inline-block bg-accent-pink text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-pink-600 transition duration-300 transform hover:scale-105" 
+               href="{{ url_for('form') }}">
+                Agendar de nuevo
+            </a>
+            
+        </div>
+    </main>
+
+    <script src="/ProyectoCitas/js/reserva_exitosa.js"></script>
+</body>
+</html>

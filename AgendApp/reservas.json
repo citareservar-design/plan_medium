@@ -1,0 +1,83 @@
+[
+    {
+        "nombre": "Yesica Murillo ",
+        "email": "diego251644@gmail.com",
+        "domicilio": "No",
+        "direccion": "N/A",
+        "notas": "Devuelta de 100 mil",
+        "tipo_una": "Poly Gel",
+        "telefono": "3185861444",
+        "date": "2025-10-07",
+        "hora": "08:00",
+        "duracion": 120,
+        "timestamp": "2025-10-04T11:23:47.344371"
+    },
+    {
+        "nombre": "Diego peña",
+        "email": "diego251644@gmail.com",
+        "domicilio": "No",
+        "direccion": "N/A",
+        "notas": "Hello",
+        "tipo_una": "Semipermanente",
+        "telefono": "3122258645",
+        "date": "2025-12-11",
+        "hora": "09:00",
+        "duracion": 60,
+        "timestamp": "2025-12-11T19:07:00.979311"
+    },
+    {
+        "nombre": "diego peña",
+        "email": "instalaciones@yeminus.com",
+        "notas": "",
+        "tipo_una": "Base Rubber",
+        "telefono": "3185861444",
+        "date": "2025-12-17",
+        "hora": "08:00",
+        "duracion": 60,
+        "timestamp": "2025-12-17T13:10:30.240212"
+    },
+    {
+        "nombre": "diego peña",
+        "email": "instalaciones@yeminus.com",
+        "notas": "ddd",
+        "tipo_una": "Decoración",
+        "telefono": "3185861444",
+        "date": "2025-12-17",
+        "hora": "09:00",
+        "duracion": 60,
+        "timestamp": "2025-12-17T13:11:39.865938"
+    },
+    {
+        "nombre": "diego peña",
+        "email": "instalaciones@yeminus.com",
+        "notas": "hello",
+        "tipo_una": "Base Rubber",
+        "telefono": "3185861444",
+        "date": "2025-12-17",
+        "hora": "14:00",
+        "duracion": 60,
+        "timestamp": "2025-12-17T13:16:15.488981"
+    },
+    {
+        "nombre": "diego peña",
+        "email": "instalaciones@yeminus.com",
+        "notas": "fff",
+        "tipo_una": "Soft Gel",
+        "telefono": "3185861444",
+        "date": "2025-12-17",
+        "hora": "15:00",
+        "duracion": 120,
+        "timestamp": "2025-12-17T13:19:07.502464"
+    },
+    {
+        "nombre": "oee",
+        "email": "instalaciones@yeminus.com",
+        "notas": "hhh",
+        "tipo_una": "Soft Gel",
+        "telefono": "3185861444",
+        "date": "2025-12-17",
+        "hora": "10:00",
+        "duracion": 120,
+        "timestamp": "2025-12-17T13:23:52.505243"
+    }
+]
