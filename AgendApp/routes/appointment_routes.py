@@ -112,8 +112,12 @@ def cancelar_cita(timestamp):
     reserva_a_borrar = next((r for r in reservas if r.get('timestamp') == timestamp), None)
     
     if reserva_a_borrar:
-        email_cliente = reserva_a_borrar.get('email')
         cancelar_cita_por_id(timestamp)
-        return redirect(url_for('appointment.citas', email_cliente=email_cliente))
+        # REVISAR REFERER: Si la petición viene de 'admin', regresa a admin
+        if 'admin' in request.referrer:
+            return redirect(url_for('admin.agenda'))
+        
+        # De lo contrario, va a la vista de cliente
+        return redirect(url_for('appointment.citas', email_cliente=reserva_a_borrar.get('email')))
 
     return redirect(url_for('appointment.index'))
