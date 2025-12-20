@@ -29,15 +29,31 @@
     
     <nav class="fixed top-0 left-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm py-3 z-50 border-b border-blue-100 dark:border-slate-800">
       <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <div class="bg-[#0ea5e9] p-1.5 rounded-lg shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 16l2 2 4-4" />
-                </svg>
+         <a
+            href="{{ url_for('appointment.form') }}"
+            class="flex items-center gap-3 hover:opacity-80 transition-all active:scale-95 group"
+          >
+            <div
+              class="flex-shrink-0 w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center p-1 border border-sky-100 shadow-sm"
+            >
+              <img
+                src="{{ url_for('static', filename='img/logo.png') }}"
+                alt="Logo"
+                class="w-full h-full object-contain"
+              />
             </div>
-            <span class="text-xl font-extrabold text-slate-800 dark:text-white tracking-tight">Agend<span class="text-[#0ea5e9]">App</span></span>
-        </div>
+
+            <div class="flex flex-col justify-center leading-none">
+              <span class="text-xl font-black text-slate-900 tracking-tighter">
+                Agend<span class="text-sky-500">App</span>
+              </span>
+              <span
+                class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1"
+              >
+                Reserva Online
+              </span>
+            </div>
+          </a>
         <a href="{{ url_for('appointment.form') }}" class="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-black uppercase tracking-widest hover:bg-slate-200 transition-all active:scale-95 border border-slate-200 dark:border-slate-700">
             Volver
         </a>
