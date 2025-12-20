@@ -8,10 +8,11 @@ from datetime import datetime, timedelta
 # --- Configuración de Rutas Relativas ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 JSON_PATH = os.path.join(BASE_DIR, 'data', 'reservas.json')
+CONFIG_PATH = os.path.join(BASE_DIR, 'data', 'config.json')
 
 HORAS_DISPONIBLES = [
     "08:00", "09:00", "10:00", "11:00", "12:00", 
-    "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"
+    "14:00", "15:00", "16:00", "17:00", "18:00"
 ]
 
 DURACION_SERVICIOS = {
@@ -27,7 +28,18 @@ SMTP_PORT = 587
 EMAIL_FROM = 'citareservar@gmail.com' 
 EMAIL_PASSWORD = 'dren psgm ncqx lrpy' 
 
-# --- Funciones de I/O ---
+# --- Funciones de Configuración y I/O ---
+
+def cargar_config():
+    """Carga la configuración de la empresa desde el JSON."""
+    try:
+        if os.path.exists(CONFIG_PATH):
+            with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+                return json.load(f)
+        return {"empresa": "Mi Negocio", "email_admin": "diego251644@gmail.com"}
+    except:
+        return {"empresa": "Mi Negocio", "email_admin": "diego251644@gmail.com"}
+
 def cargar_reservas():
     if os.path.exists(JSON_PATH):
         try:
@@ -75,20 +87,23 @@ def get_horas_ocupadas_por_superposicion(reservas, fecha_a_mostrar):
 # --- CORREOS ---
 
 def enviar_correo_confirmacion(reserva, calendar_link, cancel_link):
+    config = cargar_config()
+    empresa = config.get('empresa', '{{config.empresa}}')
     destinatario = reserva.get('email')
-    destinatario_admin = 'diego251644@gmail.com'
+    destinatario_admin = config.get('email_admin', 'diego251644@gmail.com')
+    
     try:
         msg = MIMEMultipart("alternative")
-        msg['From'] = f"AgendApp - Confirmación <{EMAIL_FROM}>"
+        msg['From'] = f"{empresa} <{EMAIL_FROM}>"
         msg['To'] = destinatario
         msg['cc'] = destinatario_admin
-        msg['Subject'] = '✨ ¡Cita Confirmada! - Editar empresa'
+        msg['Subject'] = f'✨ ¡Cita Confirmada! - {empresa}'
         
         html_body = f"""<div style="font-family:sans-serif; padding:20px; background:#f1f5f9;">
             <div style="background:white; border-radius:15px; max-width:500px; margin:auto; border:1px solid #e2e8f0; overflow:hidden;">
                 <div style="background:#0ea5e9; padding:20px; text-align:center; color:white;"><h2>Cita Confirmada</h2></div>
                 <div style="padding:20px;">
-                    <p>Hola <b>{reserva.get('nombre')}</b>, tu cita para <b>{reserva.get('tipo_una')}</b> el día <b>{reserva.get('date')}</b> a las <b>{reserva.get('hora')}</b> está lista.</p>
+                    <p>Hola <b>{reserva.get('nombre')}</b>, tu cita para <b>{reserva.get('tipo_una')}</b> en <b>{empresa}</b> el día <b>{reserva.get('date')}</b> a las <b>{reserva.get('hora')}</b> está lista.</p>
                 </div>
             </div>
         </div>"""
@@ -99,21 +114,24 @@ def enviar_correo_confirmacion(reserva, calendar_link, cancel_link):
     except: return False
 
 def enviar_correo_reagendacion(reserva, calendar_link):
+    config = cargar_config()
+    empresa = config.get('empresa', '{{config.empresa}}')
     destinatario = reserva.get('email')
-    destinatario_admin = 'diego251644@gmail.com'
+    destinatario_admin = config.get('email_admin', 'diego251644@gmail.com')
+    
     try:
         msg = MIMEMultipart("alternative")
-        msg['From'] = f"AgendApp - Reagendado <{EMAIL_FROM}>"
+        msg['From'] = f"{empresa} <{EMAIL_FROM}>"
         msg['To'] = destinatario
         msg['cc'] = destinatario_admin
-        msg['Subject'] = 'Cita Reagendada - Editar empresa'
+        msg['Subject'] = f'🔄 Cita Reagendada - {empresa}'
         html_body = f"""<div style="font-family:sans-serif; padding:20px; background:#fff7ed;">
             <div style="background:white; border-radius:15px; max-width:500px; margin:auto; border:1px solid #fed7aa; overflow:hidden;">
                 <div style="background:#f59e0b; padding:20px; text-align:center; color:white;"><h2>Cita Reagendada</h2></div>
                 <div style="padding:20px;">
                      <p>Hola <b>{reserva.get('nombre')}</b>,</p>
-                    <p>Tu cita fue reprogramada con éxito. Te esperamos en el horario acordado <b>{reserva.get('date')}</b> a las <b>{reserva.get('hora')}</b>.</p>
-                    <p style="margin-top:20px; font-size:12px; color:#94a3b8;">Si no fuiste notificado(a) de esta reagendamiento, por favor comunícate con el negocio a través de WhatsApp</p>
+                    <p>Tu cita en <b>{empresa}</b> fue reprogramada con éxito. Te esperamos el <b>{reserva.get('date')}</b> a las <b>{reserva.get('hora')}</b>.</p>
+                    <p style="margin-top:20px; font-size:12px; color:#94a3b8;">Si no solicitaste este cambio, por favor comunícate con nosotros.</p>
                 </div>
             </div>
         </div>"""
@@ -124,15 +142,17 @@ def enviar_correo_reagendacion(reserva, calendar_link):
     except: return False
 
 def enviar_correo_cancelacion(reserva):
-    """Envía correo notificando la CANCELACIÓN definitiva."""
+    config = cargar_config()
+    empresa = config.get('empresa', '{{config.empresa}}')
     destinatario = reserva.get('email')
-    destinatario_admin = 'diego251644@gmail.com'
+    destinatario_admin = config.get('email_admin', 'diego251644@gmail.com')
+    
     try:
         msg = MIMEMultipart("alternative")
-        msg['From'] = f"AgendApp - Cancelación <{EMAIL_FROM}>"
+        msg['From'] = f"{empresa} <{EMAIL_FROM}>"
         msg['To'] = destinatario
         msg['cc'] = destinatario_admin
-        msg['Subject'] = 'Cita Cancelada - Editar empresa'
+        msg['Subject'] = f'🚫 Cita Cancelada - {empresa}'
         
         html_body = f"""
         <div style="font-family:sans-serif; padding:20px; background:#fef2f2;">
@@ -140,11 +160,10 @@ def enviar_correo_cancelacion(reserva):
                 <div style="background:#ef4444; padding:20px; text-align:center; color:white;"><h2 style="margin:0;">Cita Cancelada</h2></div>
                 <div style="padding:30px; color:#475569;">
                     <p>Hola <b>{reserva.get('nombre')}</b>,</p>
-                    <p>Te informamos que la cita programada para el día <b>{reserva.get('date')}</b> ha sido <b>cancelada</b> exitosamente.</p>
+                    <p>Te informamos que tu cita en <b>{empresa}</b> para el día <b>{reserva.get('date')}</b> ha sido <b>cancelada</b>.</p>
                     <div style="background:#f8fafc; padding:15px; border-radius:10px; margin-top:20px;">
                         <p style="margin:0;"><b>Servicio:</b> {reserva.get('tipo_una')}</p>
                     </div>
-                    <p style="margin-top:20px; font-size:12px; color:#94a3b8;">Si no fuiste notificado(a) de esta cancelación, por favor comunícate con el negocio a través de WhatsApp</p>
                 </div>
             </div>
         </div>"""
