@@ -5,95 +5,72 @@ from utils.reservations import (
     DURACION_SERVICIOS, 
     format_google_calendar_datetime, 
     enviar_correo_confirmacion,
+    enviar_correo_reagendacion,
+    enviar_correo_cancelacion, # Nueva importación
     HORAS_DISPONIBLES
 )
 
 def obtener_horas_disponibles(reservas, fecha_a_mostrar):
-    """Calcula horas libres filtrando las ocupadas y las pasadas."""
     from utils.reservations import get_horas_ocupadas_por_superposicion
-    
     horas_ocupadas = get_horas_ocupadas_por_superposicion(reservas, fecha_a_mostrar)
     ahora = datetime.now()
     horas_libres = []
-
     for h in HORAS_DISPONIBLES:
         h = h.strip()
-        if h in horas_ocupadas:
-            continue
-            
-        # Evitar citas en el pasado si la fecha es hoy
+        if h in horas_ocupadas: continue
         try:
-            hora_cita_dt = datetime.strptime(f"{fecha_a_mostrar} {h}", "%Y-%m-%d %H:%M")
-            if hora_cita_dt > ahora:
+            if datetime.strptime(f"{fecha_a_mostrar} {h}", "%Y-%m-%d %H:%M") > ahora:
                 horas_libres.append(h)
-        except:
-            continue
-            
+        except: continue
     return horas_libres
 
 def obtener_horas_libres_reagendar(fecha):
-    """Carga las reservas y devuelve las horas disponibles para una fecha específica."""
-    reservas = cargar_reservas()
-    return obtener_horas_disponibles(reservas, fecha)
+    return obtener_horas_disponibles(cargar_reservas(), fecha)
 
 def crear_cita(data, host_url):
-    """Crea una nueva cita, la guarda y envía el correo de confirmación."""
     reservas = cargar_reservas()
-    
-    fecha = data.get('date')
-    hora = data.get('hora')
-    servicio = data.get('tipo_una')
+    fecha, hora, servicio = data.get('date'), data.get('hora'), data.get('tipo_una')
     duracion = DURACION_SERVICIOS.get(servicio, 60)
-    
     timestamp = str(datetime.now().timestamp()).replace('.', '')
     nueva_cita = {
-        'nombre': data.get('nombre'),
-        'email': data.get('email'),
-        'telefono': data.get('telefono'),
-        'date': fecha,
-        'hora': hora,
-        'tipo_una': servicio,
-        'duracion': duracion,
-        'notes': data.get('notes', ''),
-        'timestamp': timestamp
+        'nombre': data.get('nombre'), 'email': data.get('email'), 'telefono': data.get('telefono'),
+        'date': fecha, 'hora': hora, 'tipo_una': servicio, 'duracion': duracion,
+        'notes': data.get('notes', ''), 'timestamp': timestamp
     }
-    
     reservas.append(nueva_cita)
     guardar_reservas(reservas)
-    
     start, end = format_google_calendar_datetime(fecha, hora, duracion)
     cal_link = f"https://www.google.com/calendar/render?action=TEMPLATE&text=Cita+Nails&dates={start}/{end}"
-    can_link = f"{host_url}cancelar/{timestamp}"
-    
-    enviar_correo_confirmacion(nueva_cita, cal_link, can_link)
-    
+    enviar_correo_confirmacion(nueva_cita, cal_link, "")
     return {"status": "success"}
 
 def cancelar_cita_por_id(id_cita):
-    """Busca y elimina una cita por su timestamp único."""
+    """Busca la cita, envía correo de cancelación y luego la elimina."""
     reservas = cargar_reservas()
-    nuevas_reservas = [r for r in reservas if r.get('timestamp') != id_cita]
+    cita_a_cancelar = next((r for r in reservas if r.get('timestamp') == id_cita), None)
     
-    if len(nuevas_reservas) < len(reservas):
+    if cita_a_cancelar:
+        # 1. Enviar correo antes de borrarla de la lista
+        enviar_correo_cancelacion(cita_a_cancelar)
+        
+        # 2. Filtrar la lista para eliminarla
+        nuevas_reservas = [r for r in reservas if r.get('timestamp') != id_cita]
         guardar_reservas(nuevas_reservas)
-        return {"status": "success", "message": "Cita eliminada correctamente"}
+        return {"status": "success", "message": "Cita cancelada y notificada"}
     
     return {"status": "error", "message": "No se encontró la cita"}
 
 def reagendar_cita_por_id(id_cita, nueva_fecha, nueva_hora):
-    """Busca una cita por ID y actualiza su fecha y hora."""
     reservas = cargar_reservas()
-    cita_encontrada = False
-    
+    cita_modificada = None
     for cita in reservas:
         if cita.get('timestamp') == id_cita:
-            cita['date'] = nueva_fecha
-            cita['hora'] = nueva_hora
-            cita_encontrada = True
-            break
-            
-    if cita_encontrada:
+            cita['date'], cita['hora'] = nueva_fecha, nueva_hora
+            cita_modificada = cita; break
+    if cita_modificada:
         guardar_reservas(reservas)
-        return {"status": "success", "message": "Cita reagendada correctamente"}
-    
-    return {"status": "error", "message": "No se pudo encontrar la cita para reagendar"}
+        start, end = format_google_calendar_datetime(nueva_fecha, nueva_hora, cita_modificada.get('duracion', 60))
+        nuevo_cal_link = f"https://www.google.com/calendar/render?action=TEMPLATE&text=Cita+Reagendada&dates={start}/{end}"
+        enviar_correo_reagendacion(cita_modificada, nuevo_cal_link)
+        return {"status": "success", "message": "Cita reagendada y notificada"}
+    return {"status": "error", "message": "Error al reagendar"}
