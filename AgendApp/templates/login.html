@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Administrativo | AgendApp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen px-6">
+
+    <div class="w-full max-w-md">
+        <div class="bg-white p-10 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100">
+            
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sky-50 mb-4">
+                    <i class="fa-solid fa-user-gear text-sky-500 text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">
+                    Agend<span class="text-sky-500">App</span>
+                </h2>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Panel de Control</p>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div class="bg-rose-50 border border-rose-100 text-rose-500 p-4 rounded-2xl mb-6 text-xs font-bold text-center flex items-center justify-center gap-2">
+                   <i class="fa-solid fa-circle-exclamation"></i> {{ messages[0] }}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" class="space-y-4">
+                <div class="group">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2">Usuario</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-at absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-sky-500 transition-colors"></i>
+                        <input type="text" name="usuario" placeholder="ejemplo@admin" 
+                               class="w-full bg-slate-50 border border-slate-100 pl-12 pr-5 py-5 rounded-2xl text-slate-900 placeholder-slate-300 text-sm focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/5 outline-none transition-all" required>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-4 mb-2">Contraseña</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-sky-500 transition-colors"></i>
+                        <input type="password" name="password" placeholder="••••••••" 
+                               class="w-full bg-slate-50 border border-slate-100 pl-12 pr-5 py-5 rounded-2xl text-slate-900 placeholder-slate-300 text-sm focus:bg-white focus:border-sky-500 focus:ring-4 focus:ring-sky-500/5 outline-none transition-all" required>
+                    </div>
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-slate-900 hover:bg-sky-600 text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-xs transition-all active:scale-[0.97] shadow-xl shadow-slate-200 mt-6">
+                    Entrar al Sistema
+                </button>
+            </form>
+            
+            <div class="mt-8 text-center">
+                <a href="{{ url_for('appointment.form') }}" class="text-slate-400 hover:text-sky-500 text-[10px] font-bold uppercase tracking-widest transition-colors flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-chevron-left"></i> Volver a Reservas
+                </a>
+            </div>
+        </div>
+        
+        <p class="text-center text-slate-300 text-[9px] mt-10 font-bold uppercase tracking-[0.5em]">
+            Desarrollado por AgendApp 2025
+        </p>
+    </div>
+
+</body>
+</html>
