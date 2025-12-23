@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from datetime import datetime
+from datetime import datetime, timedelta # Añadimos timedelta
 from utils.reservations import cargar_reservas
 
 admin_bp = Blueprint('admin', __name__)
@@ -7,10 +7,15 @@ admin_bp = Blueprint('admin', __name__)
 @admin_bp.route('/agenda')
 def agenda():
     reservas = cargar_reservas()
-    hoy = datetime.now().strftime("%Y-%m-%d")
+    ahora = datetime.now()
     
-    # Filtramos las citas de hoy y las ordenamos
-    citas_hoy = [r for r in reservas if r.get('date') == hoy]
-    citas_hoy.sort(key=lambda x: x['hora'])
+    hoy = ahora.strftime("%Y-%m-%d")
+    manana = (ahora + timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    # Filtramos las citas que sean de hoy O de mañana
+    citas_proximas = [r for r in reservas if r.get('date') in [hoy, manana]]
+    
+    # Ordenamos primero por fecha y luego por hora
+    citas_proximas.sort(key=lambda x: (x['date'], x['hora']))
 
-    return render_template('admin_agenda.html', citas=citas_hoy, hoy=hoy)
+    return render_template('admin_agenda.html', citas=citas_proximas, hoy=hoy, manana=manana)

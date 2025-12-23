@@ -3,87 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AgendApp | Administrador De citas</title>
+    <title>AgendApp | Administrador De Citas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="shortcut icon" href="{{ url_for('static', filename='ico/ico.ico') }}" type="image/x-icon" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_agenda.css') }}" />
 </head>
-<body class="pb-32 text-slate-200 bg-slate-950">
+<body class="pb-32 text-slate-200 bg-slate-950 min-h-screen">
 
     <header class="max-w-5xl mx-auto px-6 pt-10 pb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <div class="text-center md:text-left">
             <h1 class="text-3xl font-black text-white tracking-tighter uppercase">Panel de Control</h1>
-            <p class="text-sky-400 font-bold tracking-widest mt-1 text-sm uppercase italic">{{ hoy }}</p>
+            <p class="text-sky-400 font-bold tracking-widest mt-1 text-sm uppercase italic">Gestión de Agenda</p>
         </div>
         <div class="bg-sky-900/40 border border-sky-500/50 px-6 py-2 rounded-full text-sky-300 text-xs font-black uppercase tracking-widest">
-            {{ citas|length }} Registros Activos
+            {{ citas|length }} Registros Próximos
         </div>
     </header>
 
     <div class="h-[1px] w-full bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-10"></div>
 
-    <main class="max-w-6xl mx-auto px-4 md:px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {% for cita in citas %}
-            <div class="neon-card p-6 md:p-8 transition-all hover:scale-[1.01] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden">
+    <main class="max-w-6xl mx-auto px-4 md:px-6 space-y-12">
+        
+        {# MACRO PARA RENDERIZAR CADA TARJETA #}
+        {% macro render_card(cita) %}
+        <div class="neon-card p-6 md:p-8 transition-all hover:scale-[1.01] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 
-                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                <div class="bg-slate-900 text-white px-6 py-4 rounded-[2rem] text-center min-w-[110px] shadow-xl border-b-4 border-sky-500">
+                    <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1">Hora</span>
+                    <span class="text-2xl font-black italic tracking-tighter">{{ cita.hora }}</span>
+                </div>
+
+                <div class="flex-1 text-center sm:text-left min-w-0">
+                    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tighter mb-2 truncate">
+                        {{ cita.nombre }}
+                    </h2>
+                    <div class="flex flex-wrap justify-center sm:justify-start items-center gap-3">
+                        <span class="bg-sky-600 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter">
+                            {{ cita.tipo_una }}
+                        </span>
+                        <span class="text-slate-500 font-bold text-sm">
+                            <i class="fa-solid fa-phone mr-1 text-sky-500"></i> {{ cita.telefono }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="flex sm:flex-col gap-3">
+                    <a href="https://wa.me/57{{ cita.telefono }}" target="_blank" 
+                       class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-md active:scale-90">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                    </a>
+
+                    <button onclick="reagendarAdmin('{{ cita.timestamp }}', '{{ cita.nombre }}')" 
+                            class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 border border-orange-200 flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all shadow-md active:scale-90">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    </button>
                     
-                    <div class="bg-slate-900 text-white px-6 py-4 rounded-[2rem] text-center min-w-[110px] shadow-xl">
-                        <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1">Hora</span>
-                        <span class="text-2xl font-black italic tracking-tighter">{{ cita.hora }}</span>
-                    </div>
-
-                    <div class="flex-1 text-center sm:text-left min-w-0">
-                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tighter mb-2 truncate">
-                            {{ cita.nombre }}
-                        </h2>
-                        <div class="flex flex-wrap justify-center sm:justify-start items-center gap-3">
-                            <span class="bg-sky-600 text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter">
-                                {{ cita.tipo_una }}
-                            </span>
-                            <span class="text-slate-500 font-bold text-sm">
-                                <i class="fa-solid fa-phone mr-1 text-sky-500"></i> {{ cita.telefono }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="flex sm:flex-col gap-3">
-                        <a href="https://wa.me/57{{ cita.telefono }}" target="_blank" 
-                           class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-md active:scale-90">
-                            <i class="fa-brands fa-whatsapp text-2xl"></i>
-                        </a>
-
-                        <button onclick="reagendarAdmin('{{ cita.timestamp }}', '{{ cita.nombre }}')" 
-                                class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 border border-orange-200 flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all shadow-md active:scale-90">
-                            <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    <form action="{{ url_for('appointment.cancelar_cita', timestamp=cita.timestamp) }}" method="POST" onsubmit="return confirm('¿Eliminar esta cita definitivamente?')">
+                        <button type="submit" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-md active:scale-90">
+                            <i class="fa-solid fa-trash-can text-xl"></i>
                         </button>
-                        
-                        <form action="{{ url_for('appointment.cancelar_cita', timestamp=cita.timestamp) }}" method="POST" onsubmit="return confirm('¿Eliminar esta cita definitivamente?')">
-                            <button type="submit" class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 border border-rose-200 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all shadow-md active:scale-90">
-                                <i class="fa-solid fa-trash-can text-xl"></i>
-                            </button>
-                        </form>
-                    </div>
+                    </form>
                 </div>
+            </div>
 
-                {% if cita.notes %}
-                <div class="mt-6 p-5 bg-slate-50/80 rounded-[1.5rem] border border-slate-200">
-                    <p class="text-slate-600 text-xs font-medium italic break-words">
-                        "{{ cita.notes }}"
-                    </p>
-                </div>
+            {% if cita.notes %}
+            <div class="mt-6 p-5 bg-slate-50/80 rounded-[1.5rem] border border-slate-200">
+                <p class="text-slate-600 text-xs font-medium italic break-words">
+                    "{{ cita.notes }}"
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        {% endmacro %}
+
+        <section>
+            <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-xl font-black text-white uppercase tracking-tighter">Hoy ({{ hoy }})</h2>
+                <div class="h-[2px] flex-1 bg-gradient-to-r from-emerald-500 to-transparent opacity-50"></div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {% set citas_hoy = citas | selectattr("date", "equalto", hoy) | list %}
+                {% if citas_hoy %}
+                    {% for cita in citas_hoy %}
+                        {{ render_card(cita) }}
+                    {% endfor %}
+                {% else %}
+                    <div class="lg:col-span-2 text-center py-10 bg-white/5 rounded-3xl border border-dashed border-white/10">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Sin citas programadas para hoy</p>
+                    </div>
                 {% endif %}
             </div>
-            {% else %}
-            <div class="lg:col-span-2 text-center py-24 bg-white/5 rounded-[3rem] border-2 border-dashed border-white/10">
-                <i class="fa-solid fa-calendar-day text-slate-700 text-5xl mb-4"></i>
-                <p class="text-slate-500 font-black uppercase tracking-[0.3em] text-xs">Agenda Despejada</p>
+        </section>
+
+        <section>
+            <div class="flex items-center gap-4 mb-6">
+                <h2 class="text-xl font-black text-slate-400 uppercase tracking-tighter">Mañana ({{ manana }})</h2>
+                <div class="h-[2px] flex-1 bg-gradient-to-r from-sky-500 to-transparent opacity-20"></div>
             </div>
-            {% endfor %}
-        </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {% set citas_manana = citas | selectattr("date", "equalto", manana) | list %}
+                {% if citas_manana %}
+                    {% for cita in citas_manana %}
+                        {{ render_card(cita) }}
+                    {% endfor %}
+                {% else %}
+                    <div class="lg:col-span-2 text-center py-10 bg-white/5 rounded-3xl border border-dashed border-white/10">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Sin citas programadas para mañana</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
     </main>
 
     <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/95 backdrop-blur-2xl px-10 py-5 rounded-full border border-white/10 shadow-2xl flex items-center gap-12 z-50">
@@ -99,65 +131,56 @@
     </nav>
 
     <script>
-async function reagendarAdmin(id, nombre) {
-    // 1. Pedir Fecha
-    const { value: fecha } = await Swal.fire({
-        title: `Reagendar a ${nombre}`,
-        html: `<input type="date" id="swal-date" class="swal2-input" min="{{ hoy }}">`,
-        confirmButtonText: 'Ver horas',
-        focusConfirm: false,
-        preConfirm: () => {
-            const f = document.getElementById('swal-date').value;
-            if (!f) return Swal.showValidationMessage('Selecciona una fecha');
-            // Bloqueo de domingo para el admin también
-            if (new Date(f + 'T00:00:00').getDay() === 0) return Swal.showValidationMessage('Domingos no hay servicio');
-            return f;
+    async function reagendarAdmin(id, nombre) {
+        const { value: fecha } = await Swal.fire({
+            title: `Reagendar a ${nombre}`,
+            html: `<input type="date" id="swal-date" class="swal2-input" min="{{ hoy }}">`,
+            confirmButtonText: 'Ver horas',
+            focusConfirm: false,
+            preConfirm: () => {
+                const f = document.getElementById('swal-date').value;
+                if (!f) return Swal.showValidationMessage('Selecciona una fecha');
+                if (new Date(f + 'T00:00:00').getDay() === 0) return Swal.showValidationMessage('Domingos cerrado');
+                return f;
+            }
+        });
+
+        if (!fecha) return;
+
+        const resp = await fetch(`/api/horas-disponibles/${fecha}`);
+        const horas = await resp.json();
+
+        if (!horas || horas.length === 0) {
+            Swal.fire('Sin cupos', 'No hay horas libres para ese día', 'error');
+            return;
         }
-    });
 
-    if (!fecha) return;
+        const opcionesHoras = {};
+        horas.forEach(h => { opcionesHoras[h.valor] = h.texto; });
 
-    // 2. Cargar horas (Esto llama a tu API que ya filtra ocupados)
-    const resp = await fetch(`/api/horas-disponibles/${fecha}`);
-    const horas = await resp.json();
+        const { value: hora } = await Swal.fire({
+            title: 'Selecciona Nueva Hora',
+            input: 'select',
+            inputOptions: opcionesHoras,
+            inputPlaceholder: 'Seleccione una hora',
+            showCancelButton: true
+        });
 
-    if (!horas || horas.length === 0) {
-        Swal.fire('Sin cupos', 'No hay horas libres (ocupado o domingo)', 'error');
-        return;
+        if (!hora) return;
+
+        const resultado = await fetch(`/api/reagendar/${id}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ date: fecha, hora: hora })
+        });
+
+        const data = await resultado.json();
+        if (data.status === 'success') {
+            Swal.fire('¡Listo!', 'Cita actualizada.', 'success').then(() => location.reload());
+        } else {
+            Swal.fire('Error', data.message, 'error');
+        }
     }
-
-    // 3. Convertir lista de objetos a formato que entiende el Select de SweetAlert
-    const opcionesParaSelect = {};
-    horas.forEach(h => {
-        opcionesParaSelect[h.valor] = h.texto; // Muestra 02:00 PM, pero guarda 14:00
-    });
-
-    // 4. Pedir Hora
-    const { value: hora } = await Swal.fire({
-        title: 'Selecciona Nueva Hora',
-        input: 'select',
-        inputOptions: opcionesParaSelect,
-        inputPlaceholder: 'Seleccione una hora',
-        showCancelButton: true,
-        confirmButtonText: 'Confirmar Cambio'
-    });
-
-    if (!hora) return;
-
-    // 5. Enviar el cambio
-    const resultado = await fetch(`/api/reagendar/${id}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ date: fecha, hora: hora })
-    });
-
-    const data = await resultado.json();
-    if (data.status === 'success') {
-        Swal.fire('¡Listo!', 'Cita actualizada.', 'success').then(() => location.reload());
-    } else {
-        Swal.fire('Error', data.message, 'error');
-    }
-}
     </script>
 </body>
 </html>
